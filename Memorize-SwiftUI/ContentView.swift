@@ -8,14 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
-    var emojis = ["😇", "🗽", "🎬", "🐱", "🚨", "💬", "📍", "😆", "📸", "🤪", "🥳", "🥸"]
-    @State var emojiCount = 3
+    
+    var vehicles = ["✈️", "⛵️", "🚁", "🚗", "🚲", "🛴", "🚢", "🚠", "🚖", "🛵", "🚛", "🚔", "🛻", "🦼", "🦯", "🏎️", "🚤" ]
+    var animals = ["🐶", "🐱", "🐨", "🐭", "🐷", "🐸", "🐵", "🐤", "🐮", "🦆", "🦉", "🐴", "🦋", "🐛", "🦇", "🐝", "🦄"]
+    var plants = ["🌵", "🌲", "🍄", "🌹", "🌸", "🪷", "🌻", "🍁", "🐚", "🌺", "🌾", "🎋", "🍌", "🍇", "🍉", "🍈", "🍎"]
+    @State var emojis = ["😀", "🥹", "😇", "😍", "😜", "😎", "🥸", "🤩", "🥶", "🥳", "😭", "😡", "😱", "🫥", "🫠", "🤫", "😶‍🌫️"]
+    
+    @State var emojiCount = 17
     
     var body: some View {
-        
         VStack {
+            Text("Memorize!")
+                .font(.largeTitle)
             ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
+                let bestWidth = widthThatBestFits(cardCount: emojiCount)
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: widthThatBestFits(cardCount: emojiCount)))]) {
+                    
                     ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
                         CardView(content: emoji).aspectRatio(2/3, contentMode: .fill)
                     }
@@ -24,39 +32,83 @@ struct ContentView: View {
             .foregroundColor(.red)
             Spacer()
             HStack {
-                addButton
+                vehicleThemeButton
                 Spacer()
-                removeButton
+                animalThemeButton
+                Spacer()
+                plantThemeButton
             }
-            .padding(.horizontal)
-            .font(.largeTitle)
         }
         .padding(.horizontal)
         
+    }
+    
+    var vehicleThemeButton : some View {
+        Button {
+            emojiCount = Int.random(in: 4...17)
+            emojis = vehicles.shuffled()
+        } label: {
+            VStack {
+                Image(systemName: "car")
+                    .font(.largeTitle)
+                Text("Vehicle")
+            }
+            
+        }
+    }
+    
+    var animalThemeButton : some View {
+        Button {
+            emojiCount = Int.random(in: 4...17)
+            emojis = animals.shuffled()
+        } label: {
+            VStack {
+                Image(systemName: "hare")
+                    .font(.largeTitle)
+                Text("Animal")
+            }
+        }
+    }
+    
+    var plantThemeButton : some View {
+        Button {
+            emojiCount = Int.random(in: 4...17)
+            emojis = plants.shuffled()
+        } label: {
+            VStack {
+                Image(systemName: "leaf")
+                    .font(.largeTitle)
+                Text("Plants")
+            }
+        }
+    }
+    
+    func widthThatBestFits(cardCount: Int) -> CGFloat {
+        
+        var bestWidth = 200
+        
+        if cardCount > 25 {
+            bestWidth = 50
+        } else if cardCount > 16 {
+            bestWidth = 60
+        } else if cardCount > 9 {
+            bestWidth = 80
+        } else if cardCount > 4 {
+            bestWidth = 100
+        } else if cardCount > 1 {
+            bestWidth = 150
+        } else {
+            bestWidth = 200
+        }
+        
+        
+        return CGFloat(bestWidth)
         
     }
     
-    
-    var addButton : some View {
-        Button {
-            if emojiCount > 1 {
-                emojiCount -= 1
-            }
-        } label: {
-            Image(systemName: "minus.circle")
-        }
-    }
-    
-    var removeButton : some View {
-        Button {
-            if emojiCount < emojis.count {
-                emojiCount += 1
-            }
-        } label: {
-            Image(systemName: "plus.circle")
-        }
-    }
 }
+
+
 
 
 
